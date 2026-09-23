@@ -163,7 +163,7 @@ export default function activate(pi: ExtensionAPI) {
               "",
               "⚠️ **Isolation disabled (isolation: off)**: candidate source will be cloned/unpacked on the host.",
               "Third-party packages may contain malicious install scripts or build logic; host-side analysis is not sandboxed.",
-              "This mode is not recommended. Delete data/pi-find-packages/config.json or set isolation:\"docker\" to restore the default.",
+              "This mode is not recommended. Delete " + configFile + " or set isolation:\"docker\" to restore the default.",
             ].join("\n")
           : "";
       const prompt = [
@@ -171,15 +171,17 @@ export default function activate(pi: ExtensionAPI) {
         `**${query}**`,
         "",
         "Steps:",
-        "1. Search: run multiple jq/grep keyword passes over `~/.pi/agent/data/pi-find-packages/catalog.jsonl` against description/keywords/name, trying synonyms as needed; "
+        "1. Search: run multiple jq/grep keyword passes over `" + catalog + "` against description/keywords/name, trying synonyms as needed; "
         + (semanticEnabled()
             ? "also run `qmd query --collection pi-pkg-readmes` for semantic search over cached READMEs (skip if empty); "
             : "")
         + "pick the 3-5 most relevant candidates.",
-        "2. Review each candidate (read-only): `npm view <pkg>` for version/deps/peer; clone or download source via the repo link; read entry points, extension points, and the README; judge maintenance activity, dependency surface, and supply-chain signals. "
-        + "After reviewing, save the package README to `~/.pi/agent/data/pi-find-packages/readmes/<name with / replaced by __>.md` (first line `# <name> <version> <date>`)"
-        + (semanticEnabled() ? ", then run `qmd index pi-pkg-readmes` to update the index" : "") + ".",
-        `3. Execution environment: ${iso === "docker" ? "all cloning/unpacking/source analysis must run inside the Docker container (see docker/Dockerfile.analysis); the host only receives analysis text; never run a candidate's install scripts." : "not isolated — analyze read-only on the host (see the risk note above)."}`,
+        "2. Review each candidate: `npm view <pkg>` for version/deps/peer, plus the README and registry metadata on the host; judge maintenance activity, dependency surface, and supply-chain signals. Any cloning or unpacking of candidate source happens in step 3's sandbox only — never fetch candidate source on the host. "
+        + "After reviewing, save the package README to `" + join(dataDir, "readmes") + "/<name with / replaced by __>.md` (first line `# <name> <version> <date>`) "
+        + (semanticEnabled() ? "then refresh the semantic index with `qmd update && qmd embed`" : "") + ".",
+        `3. Execution environment: ${iso === "docker"
+          ? "all cloning/unpacking/source analysis must run inside the Docker container (see " + join(pkgDir, "docker/Dockerfile.analysis") + "); the host only receives analysis text; never run a candidate's install scripts."
+          : "not isolated — analyze read-only on the host (see the risk note above)."}`,
         "4. Criteria: feature overlap with the current setup / installed packages (Unix philosophy: features must not cross); pi compatibility (peer ranges); maintenance activity; dependency and supply-chain safety.",
         "5. Output: a candidate comparison table (name/version/activity/fit/risk) + a clear recommendation with reasons. The analysis report is not install authorization — I decide whether to integrate.",
         riskNote,
