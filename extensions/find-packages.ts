@@ -5,12 +5,14 @@
  * Cold start: copies the bundled data/catalog.jsonl.gz from the package on first run.
  * Isolation: config.json { "isolation": "docker" (default) | "off" } — see skill for semantics.
  */
-import { existsSync, mkdirSync, copyFileSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { gunzipSync } from "node:zlib";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
-export default function activate(pi) {
+export default function activate(pi: ExtensionAPI) {
   // PI_CODING_AGENT_DIR is the official config-dir override (docs/environment-variables.md).
   const agentDir = process.env.PI_CODING_AGENT_DIR || join(process.env.HOME ?? "", ".pi/agent");
   const dataDir = join(agentDir, "data/pi-find-packages");
@@ -23,8 +25,8 @@ export default function activate(pi) {
   if (!existsSync(catalog)) {
     mkdirSync(dataDir, { recursive: true });
     if (existsSync(bundled)) {
-      copyFileSync(bundled, join(dataDir, "catalog.jsonl.gz"));
-      pi.appendEntry("find-packages", { event: "cold-start-copy", from: bundled });
+      writeFileSync(catalog, gunzipSync(readFileSync(bundled)));
+      pi.appendEntry("find-packages", { event: "cold-start-extract", from: bundled });
     }
   }
 

@@ -3,13 +3,33 @@
   "version": "0.1.0",
   "description": "Local catalog of the pi package ecosystem with /find-packages: offline search, cold-start data, and sandboxed source analysis for integration review",
   "type": "module",
-  "keywords": ["pi-package", "pi", "pi-extension", "packages", "catalog", "discovery"],
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "packages",
+    "catalog",
+    "discovery"
+  ],
   "license": "MIT",
   "engines": {
     "node": ">=22"
   },
   "pi": {
-    "extensions": ["extensions/find-packages.ts"],
-    "skills": ["skills"]
-  }
+    "extensions": [
+      "extensions/find-packages.ts"
+    ],
+    "skills": [
+      "skills"
+    ]
+  },
+  "author": "nailuoGG",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nailuoGG/pi-find-packages.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nailuoGG/pi-find-packages/issues"
+  },
+  "homepage": "https://github.com/nailuoGG/pi-find-packages#readme"
 }
