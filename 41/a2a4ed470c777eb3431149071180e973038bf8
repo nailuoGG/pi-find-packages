@@ -1,0 +1,18 @@
+README.md
+  h_1c00b09ac89128 15
+extensions/find-packages.ts
+  h_1c00b09ac89128 23
+package.json
+  h_1c00b09ac89128 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "41a2a4ed470c777eb3431149071180e973038bf8",
+  "prompts": {},
+  "humans": {
+    "h_1c00b09ac89128": {
+      "author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
