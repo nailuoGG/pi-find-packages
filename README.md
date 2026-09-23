@@ -54,6 +54,13 @@ docker build -t pi-find-packages-analysis -f docker/Dockerfile.analysis docker
 
 The image contains no pi and no credentials: it exists solely to clone/unpack/read third-party source. Never execute a candidate package's install scripts or build artifacts in any environment.
 
+## Releasing
+
+Publishing is automated: push a tag `v<version>` matching `package.json`, and the
+`publish.yml` workflow verifies the version, publishes `@nailuogg/pi-find-packages`
+to npm, and creates a GitHub release. The `NPM_TOKEN` repository secret must hold a
+granular npm access token scoped to the `@nailuogg` packages (npmjs.com → Access Keys).
+
 ## Security boundaries
 
 - An analysis report is **not** install authorization — whether to `pi install` is always the user's decision
