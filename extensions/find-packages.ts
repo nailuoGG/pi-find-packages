@@ -6,6 +6,7 @@
  * Isolation: config.json { "isolation": "docker" (default) | "off" } — see skill for semantics.
  */
 import { existsSync, mkdirSync, copyFileSync, readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -36,6 +37,25 @@ export default function activate(pi) {
     }
   }
 
+  // Semantic search via qmd: "auto" (default) = enabled iff qmd binary exists; "on" forces; "off" disables.
+  let qmdAvailable: boolean | undefined;
+  function semanticEnabled() {
+    let pref = "auto";
+    try {
+      const cfg = JSON.parse(readFileSync(configFile, "utf8"));
+      if (cfg.semantic === "on" || cfg.semantic === "off") pref = cfg.semantic;
+    } catch {}
+    if (pref === "off") return false;
+    if (qmdAvailable === undefined) {
+      try {
+        qmdAvailable = spawnSync("qmd", ["--version"], { timeout: 5000 }).status === 0;
+      } catch {
+        qmdAvailable = false;
+      }
+    }
+    return qmdAvailable;
+  }
+
   pi.registerCommand("find-packages", {
     description: "Search local pi-package catalog for packages matching a need",
     handler: async (args, ctx) => {
@@ -64,9 +84,11 @@ export default function activate(pi) {
         "",
         "步骤：",
         "1. 检索：用 jq/grep 对 `~/.pi/agent/data/pi-find-packages/catalog.jsonl` 按 description/keywords/名称做多组关键词检索，必要时换同义词；"
-        + "另跑 `qmd query --collection pi-pkg-readmes` 语义搜索已有 README 缓存（为空则跳过）；选 3-5 个最相关候选。",
+        + (semanticEnabled()
+            ? "另跑 `qmd query --collection pi-pkg-readmes` 语义搜索已有 README 缓存（为空则跳过）；"
+            : "") + "选 3-5 个最相关候选。",
         "2. 逐候选深入分析（只读）：`npm view <pkg>` 查版本/依赖/peer；按 repo 链接克隆或下载源码，阅读入口、扩展点、README，判断维护活跃度、依赖面、供应链信号。"
-        + "评估完成后把该包 README 写入 `~/.pi/agent/data/pi-find-packages/readmes/<name 的 / 换 __>.md`（首行 `# <name> <version> <date>`），并跑 `qmd index pi-pkg-readmes`。",
+        + "评估完成后把该包 README 写入 `~/.pi/agent/data/pi-find-packages/readmes/<name 的 / 换 __>.md`（首行 `# <name> <version> <date>`）" + (semanticEnabled() ? "，并跑 `qmd index pi-pkg-readmes` 增量索引" : "") + "。",
         `3. 执行环境：${iso === "docker" ? "所有克隆/解包/源码分析必须在 Docker 容器内进行（见 docker/Dockerfile.analysis），宿主机只接收分析文本，绝不运行候选包的 install 脚本。" : "未隔离，直接在宿主机只读分析（见上方风险提示）。"}`,
         "4. 评估判据：功能与现有配置/已装包是否交叉（Unix 哲学：功能不交叉）；pi 兼容（peer 版本）；维护活跃度；依赖与供应链安全。",
         "5. 输出：候选对比表（名称/版本/活跃度/匹配度/风险）+ 明确推荐及理由。分析报告不等于安装授权，是否集成由我决定。",

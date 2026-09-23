@@ -10,7 +10,7 @@
 ## 检索方法
 
 1. 精确：`jq -r 'select(.description|test("关键词";"i")) | [.name,.version,.description] | @tsv' catalog.jsonl`，多组同义词各查一轮（英文为主，覆盖 remote/telegram/discord/web 等通道词）。
-2. 语义：`qmd query --collection pi-pkg-readmes "需求描述"`——搜索已评估包的 README 缓存（随使用增长；缓存为空时跳过）。
+2. 语义（可选）：`qmd query --collection pi-pkg-readmes "需求描述"`——搜索已评估包的 README 缓存（随使用增长；缓存为空时跳过）。仅当 qmd 可用且未被 `config.json` 的 `"semantic":"off"` 关闭时使用；否则跳过此步，精确检索照常。
 3. 两者都无结果时兜底 `npm search`，并提示目录可能过期。
 
 ## README 缓存（评估时顺手写入）

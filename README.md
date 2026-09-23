@@ -22,7 +22,9 @@ pi install /path/to/pi-find-packages   # local trial
 `<PI_CODING_AGENT_DIR>/data/pi-find-packages/` (default `~/.pi/agent/data/pi-find-packages/`)
 
 - `catalog.jsonl` — catalog data (one package per line: name/version/description/date/author/keywords/repo)
-- `config.json` — `{"isolation": "docker" | "off"}`, default `docker`
+- `config.json` — `{"isolation": "docker" | "off", "semantic": "auto" | "on" | "off"}`
+  - `isolation` defaults to `docker` (sandboxed source analysis)
+  - `semantic` controls semantic search over lazily-cached READMEs (via [qmd](https://github.com/tobi/qmd)); defaults to `auto`: enabled automatically when the `qmd` binary is present, force with `"on"`, disable with `"off"`
 
 ## Refreshing the catalog
 
