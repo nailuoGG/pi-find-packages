@@ -1,0 +1,14 @@
+scripts/sync-catalog.mjs
+  h_1c00b09ac89128 8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "ff921d99506b26c3ec16851b594b9dc31fddb3e3",
+  "prompts": {},
+  "humans": {
+    "h_1c00b09ac89128": {
+      "author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
