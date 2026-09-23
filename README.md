@@ -21,10 +21,27 @@ pi install /path/to/pi-find-packages   # local trial
 
 `<PI_CODING_AGENT_DIR>/data/pi-find-packages/` (default `~/.pi/agent/data/pi-find-packages/`)
 
-- `catalog.jsonl` — catalog data (one package per line: name/version/description/date/author/keywords/repo)
+- `catalog.jsonl` — catalog data (one package per line: name/version/description/date/author/publisher/keywords/repo)
 - `config.json` — `{"isolation": "docker" | "off", "semantic": "auto" | "on" | "off"}`
   - `isolation` defaults to `docker` (sandboxed source analysis)
   - `semantic` controls semantic search over lazily-cached READMEs (via [qmd](https://github.com/tobi/qmd)); defaults to `auto`: enabled automatically when the `qmd` binary is present, force with `"on"`, disable with `"off"`
+- `readmes/` — READMEs of reviewed candidates, the corpus behind semantic search (see below)
+
+## Semantic search setup (optional)
+
+Semantic search reads a qmd collection named `pi-pkg-readmes`, pointed at the `readmes/`
+directory above. Nothing in this package registers that collection, and qmd does not create
+it on demand: an unregistered directory simply stays empty, so semantic search degrades to
+lexical search with no error. Register it once:
+
+```bash
+qmd collection add "$HOME/.pi/agent/data/pi-find-packages/readmes" --name pi-pkg-readmes
+qmd collection show pi-pkg-readmes   # confirm the path matches your data directory
+```
+
+Substitute your real data directory when `PI_CODING_AGENT_DIR` is set. Afterwards
+`/find-packages` keeps the corpus current on its own: each reviewed candidate's README is
+saved into `readmes/` and indexed with `qmd update && qmd embed`.
 
 ## Refreshing the catalog
 
