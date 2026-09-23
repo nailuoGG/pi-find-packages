@@ -17,10 +17,10 @@
   },
   "pi": {
     "extensions": [
-      "extensions/find-packages.ts"
+      "./extensions/find-packages.ts"
     ],
     "skills": [
-      "skills"
+      "./skills"
     ]
   },
   "author": "nailuoGG",
@@ -31,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/nailuoGG/pi-find-packages/issues"
   },
-  "homepage": "https://github.com/nailuoGG/pi-find-packages#readme"
+  "homepage": "https://github.com/nailuoGG/pi-find-packages#readme",
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  }
 }
