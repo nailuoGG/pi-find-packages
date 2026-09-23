@@ -1,0 +1,29 @@
+extensions/find-packages.ts
+  s_1b49f879faf9d8::t_f2c46d156a5589 66-69
+skills/find-packages/SKILL.md
+  s_79b59001b8b7be::t_b99646848dabc5 13-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "0f8873db8e269cf6ab4f51da32cf30c305b367b3",
+  "prompts": {},
+  "sessions": {
+    "s_1b49f879faf9d8": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0ccb2-eaef-75d6-9b18-bff97cf2df73",
+        "model": "glm-5.3-flash"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    },
+    "s_79b59001b8b7be": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0ccf6-3cbb-75b0-81ca-086da1bb7256",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
