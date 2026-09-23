@@ -130,6 +130,18 @@ qmd update && qmd embed
 This cache is the corpus behind semantic search. Never bulk-fetch READMEs — it grows one real review at
 a time.
 
+**One-time setup.** Semantic search needs this directory registered as the qmd collection
+`pi-pkg-readmes`, and nothing in this package registers it: an unregistered directory stays empty and
+semantic search then degrades to lexical search without any error. Register it once:
+
+```bash
+qmd collection add "<catalog dir>/readmes" --name pi-pkg-readmes
+```
+
+Check where the collection points with `qmd collection show pi-pkg-readmes`. If it points at another
+directory, say so and give the user the command above instead of saving READMEs into a directory that is
+never indexed.
+
 ## Configuration
 
 `<catalog dir>/config.json` (absent file → defaults apply):
@@ -144,6 +156,7 @@ a time.
 |---|---|
 | `catalog.jsonl` missing | Cold start extracts it automatically; if it is still missing, run `/find-packages update` |
 | Catalog older than 30 days, or no matches | Refresh (§2), then search again; note staleness in the report if the refresh fails |
-| `qmd` missing, `semantic: "off"`, or the `pi-pkg-readmes` collection is empty | Skip semantic search; rely on lexical passes |
+| `qmd` missing, or `semantic: "off"` | Skip semantic search; rely on lexical passes |
+| `pi-pkg-readmes` empty or registered against another directory | Still skip semantic search, but tell the user the one-time setup command — an unindexed cache never becomes searchable on its own |
 | Docker unavailable | Stop before source analysis, report the blocker, and ask the user how to proceed |
 | `config.json` absent | Defaults apply: Docker isolation on, semantic `auto` |
