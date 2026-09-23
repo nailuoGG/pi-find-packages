@@ -28,11 +28,23 @@ pi install /path/to/pi-find-packages   # local trial
 
 ## Refreshing the catalog
 
-```bash
-node <package-dir>/scripts/sync-catalog.mjs
-```
+Preferred, in order:
 
-Full pull in ~40 requests; once every ≥30 days is plenty — please avoid hammering the npm registry.
+1. `/find-packages update` — pulls the latest snapshot from the jsDelivr `data` branch
+   (`cdn.jsdelivr.net/gh/nailuoGG/pi-find-packages@data`), falls back to the npmmirror
+   tarball of the latest published version. Checksum-verified, atomic replace.
+2. Full rebuild from the npm registry search API (~40 requests):
+
+   ```bash
+   node <package-dir>/scripts/sync-catalog.mjs            # default data dir
+   node scripts/sync-catalog.mjs --out /tmp/catalog       # custom output dir (used by CI)
+   ```
+
+   Once every ≥30 days is plenty — please avoid hammering the npm registry.
+
+A GitHub Actions workflow (`update-data.yml`) refreshes the `data` branch daily when the
+corpus changes, which is what the jsDelivr channel serves. The npmmirror channel tracks
+the latest npm publish and therefore updates on release cadence.
 
 ## Analysis sandbox
 

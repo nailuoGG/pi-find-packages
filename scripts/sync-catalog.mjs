@@ -2,16 +2,19 @@
 // Sync the pi-package catalog from the npm registry search API.
 // Data source: https://registry.npmjs.org/-/v1/search?text=keywords:pi-package
 // Output: JSONL (one package per line) at ~/.pi/agent/data/pi-find-packages/catalog.jsonl
-// Usage: node sync-catalog.mjs [--full]   (full = fetch all pages; default = same, incremental not yet needed at this scale)
+// Usage: node sync-catalog.mjs [--out <dir>]
+//   --out: output directory (default: ~/.pi/agent/data/pi-find-packages; CI writes to a checkout of the data branch)
 
 import { mkdirSync, writeFileSync, renameSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
 import { gzipSync } from "node:zlib";
+import { createHash } from "node:crypto";
 
 const PAGE_SIZE = 250;
 const REQUEST_DELAY_MS = 300; // be polite to the registry
-const OUT_DIR = join(homedir(), ".pi/agent/data/pi-find-packages");
+const outArg = process.argv.indexOf("--out");
+const OUT_DIR = outArg > -1 ? process.argv[outArg + 1] : join(homedir(), ".pi/agent/data/pi-find-packages");
 const OUT_FILE = join(OUT_DIR, "catalog.jsonl");
 const OUT_GZ = join(OUT_DIR, "catalog.jsonl.gz");
 
@@ -58,6 +61,8 @@ const tmp = OUT_FILE + ".tmp";
 writeFileSync(tmp, lines.join("\n") + "\n");
 renameSync(tmp, OUT_FILE);
 writeFileSync(OUT_GZ, gzipSync(Buffer.from(lines.join("\n") + "\n")));
+
+writeFileSync(OUT_GZ + ".sha256", createHash("sha256").update(readFileSync(OUT_GZ)).digest("hex") + "\n");
 
 const bytes = statSync(OUT_FILE).size;
 console.log(`done: ${lines.length} packages, ${(bytes / 1e6).toFixed(1)} MB -> ${OUT_FILE}`);
