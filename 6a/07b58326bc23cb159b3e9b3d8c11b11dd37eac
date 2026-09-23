@@ -1,0 +1,19 @@
+skills/find-packages/SKILL.md
+  s_71c2141e66491f::t_8cbc05a0389d62 1-14,16,18-20,22-25,27,29,31-35,37,39,41-42,44-49,51,53-56,58-149
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "6a07b58326bc23cb159b3e9b3d8c11b11dd37eac",
+  "prompts": {},
+  "sessions": {
+    "s_71c2141e66491f": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0c726-763f-753a-9b98-117065abd58d",
+        "model": "deepseek-flash"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
