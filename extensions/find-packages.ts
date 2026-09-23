@@ -20,7 +20,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 const JSDELIVR_GZ = "https://cdn.jsdelivr.net/gh/nailuoGG/pi-find-packages@data/data/catalog.jsonl.gz";
 const JSDELIVR_SHA = "https://cdn.jsdelivr.net/gh/nailuoGG/pi-find-packages@data/data/catalog.jsonl.gz.sha256";
-const NPMIRROR_TARBALL = "https://registry.npmmirror.com/@happy-dev%2Fpi-find-packages/latest";
+const NPMIRROR_TARBALL = "https://registry.npmmirror.com/@nailuogg%2Fpi-find-packages/latest";
 
 export default function activate(pi: ExtensionAPI) {
   // PI_CODING_AGENT_DIR is the official config-dir override (docs/environment-variables.md).
