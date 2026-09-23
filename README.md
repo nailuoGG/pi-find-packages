@@ -12,7 +12,7 @@ A [pi](https://pi.dev) extension providing a local catalog of the pi package eco
 ## Install
 
 ```bash
-pi install npm:pi-find-packages        # once published
+pi install npm:@happy-dev/pi-find-packages
 pi install git:github.com/nailuoGG/pi-find-packages
 pi install /path/to/pi-find-packages   # local trial
 ```

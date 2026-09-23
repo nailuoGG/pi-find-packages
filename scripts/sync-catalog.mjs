@@ -12,7 +12,7 @@ import { gzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 
 const PAGE_SIZE = 250;
-const REQUEST_DELAY_MS = 300; // be polite to the registry
+const REQUEST_DELAY_MS = 1000; // shared runner IPs get rate-limited fast; stay polite // be polite to the registry
 const outArg = process.argv.indexOf("--out");
 const OUT_DIR = outArg > -1 ? process.argv[outArg + 1] : join(homedir(), ".pi/agent/data/pi-find-packages");
 const OUT_FILE = join(OUT_DIR, "catalog.jsonl");
@@ -23,9 +23,16 @@ let total = Infinity;
 
 async function fetchPage(from) {
   const url = `https://registry.npmjs.org/-/v1/search?text=keywords:pi-package&size=${PAGE_SIZE}&from=${from}`;
-  const res = await fetch(url, { headers: { accept: "application/json" } });
-  if (!res.ok) throw new Error(`registry ${res.status} at from=${from}`);
-  return res.json();
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(url, { headers: { accept: "application/json" } });
+    if (res.ok) return res.json();
+    if (attempt >= 5 || (res.status !== 429 && res.status >= 500)) {
+      throw new Error(`registry ${res.status} at from=${from} after ${attempt + 1} attempts`);
+    }
+    const wait = Math.min(30000, 2000 * 2 ** attempt); // 2s, 4s, 8s, 16s, 30s, 30s
+    process.stderr.write(`registry ${res.status} at from=${from}; retrying in ${wait / 1000}s\n`);
+    await new Promise((r) => setTimeout(r, wait));
+  }
 }
 
 function toRecord(p) {

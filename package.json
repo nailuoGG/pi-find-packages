@@ -1,6 +1,6 @@
 {
-  "name": "pi-find-packages",
-  "version": "0.1.0",
+  "name": "@happy-dev/pi-find-packages",
+  "version": "0.1.1",
   "description": "Local catalog of the pi package ecosystem with /find-packages: offline search, cold-start data, and sandboxed source analysis for integration review",
   "type": "module",
   "keywords": [
@@ -34,5 +34,8 @@
   "homepage": "https://github.com/nailuoGG/pi-find-packages#readme",
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
