@@ -5,7 +5,7 @@
 // Usage: node sync-catalog.mjs [--out <dir>]
 //   --out: output directory (default: ~/.pi/agent/data/pi-find-packages; CI writes to a checkout of the data branch)
 
-import { mkdirSync, writeFileSync, renameSync, statSync } from "node:fs";
+import { mkdirSync, writeFileSync, renameSync, statSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
 import { gzipSync } from "node:zlib";
