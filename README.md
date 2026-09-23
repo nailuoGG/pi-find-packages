@@ -58,8 +58,10 @@ The image contains no pi and no credentials: it exists solely to clone/unpack/re
 
 Publishing is automated: push a tag `v<version>` matching `package.json`, and the
 `publish.yml` workflow verifies the version, publishes `@nailuogg/pi-find-packages`
-to npm, and creates a GitHub release. The `NPM_TOKEN` repository secret must hold a
-granular npm access token scoped to the `@nailuogg` packages (npmjs.com → Access Keys).
+to npm, and creates a GitHub release. Publishing uses npm **Trusted Publishing (OIDC)**: the package's npm settings list
+this repository and `publish.yml` as a trusted publisher, so CI authenticates with a
+short-lived OIDC token — no `NPM_TOKEN` secret involved. Requires the workflow to run
+with `id-token: write` (set) and npm >= 11.5.1 (the workflow installs the latest npm).
 
 ## Security boundaries
 
