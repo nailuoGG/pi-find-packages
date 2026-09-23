@@ -1,0 +1,19 @@
+README.md
+  s_1b49f879faf9d8::t_a9140a2cfbfdc5 3,5,7-10,12,15,17,20,22,24-25,27,30,33,35,41,43,45-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "d037e61fda4b7c3ff44bd09a61fedbee40c95f43",
+  "prompts": {},
+  "sessions": {
+    "s_1b49f879faf9d8": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0ccb2-eaef-75d6-9b18-bff97cf2df73",
+        "model": "glm-5.3-flash"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
