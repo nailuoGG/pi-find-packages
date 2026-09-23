@@ -1,0 +1,15 @@
+{
+  "name": "pi-find-packages",
+  "version": "0.1.0",
+  "description": "Local catalog of the pi package ecosystem with /find-packages: offline search, cold-start data, and sandboxed source analysis for integration review",
+  "type": "module",
+  "keywords": ["pi-package", "pi", "pi-extension", "packages", "catalog", "discovery"],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "pi": {
+    "extensions": ["extensions/find-packages.ts"],
+    "skills": ["skills"]
+  }
+}
