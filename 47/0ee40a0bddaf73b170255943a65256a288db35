@@ -1,0 +1,23 @@
+README.md
+  s_1b49f879faf9d8::t_015a176f421a04 25-27
+extensions/find-packages.ts
+  s_1b49f879faf9d8::t_fd0aba0d912b9f 9,40-58,87-89,91
+skills/find-packages/SKILL.md
+  s_1b49f879faf9d8::t_9f5524434c52b2 13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "470ee40a0bddaf73b170255943a65256a288db35",
+  "prompts": {},
+  "sessions": {
+    "s_1b49f879faf9d8": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0ccb2-eaef-75d6-9b18-bff97cf2df73",
+        "model": "glm-5.3-flash"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
