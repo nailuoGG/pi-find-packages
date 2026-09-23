@@ -1,0 +1,10 @@
+{
+  "providers": {
+    "mock": {
+      "baseUrl": "http://127.0.0.1:${MOCK_PORT}/v1",
+      "api": "openai-completions",
+      "apiKey": "test-key-not-a-secret",
+      "models": [{ "id": "mock-model" }]
+    }
+  }
+}

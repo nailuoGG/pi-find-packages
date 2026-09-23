@@ -1,0 +1,9 @@
+{
+  "defaultTools": ["read", "bash"],
+  "compaction": { "enabled": false },
+  "enableInstallTelemetry": false,
+  "enableAnalytics": false,
+  "packages": [],
+  "extensions": [],
+  "skills": []
+}

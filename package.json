@@ -3,6 +3,9 @@
   "version": "0.1.3",
   "description": "Local catalog of the pi package ecosystem with /find-packages: offline search, cold-start data, and sandboxed source analysis for integration review",
   "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
   "keywords": [
     "pi-package",
     "pi",
