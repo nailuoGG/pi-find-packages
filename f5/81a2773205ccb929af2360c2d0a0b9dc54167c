@@ -1,0 +1,14 @@
+extensions/find-packages.ts
+  h_1c00b09ac89128 39-46
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "f581a2773205ccb929af2360c2d0a0b9dc54167c",
+  "prompts": {},
+  "humans": {
+    "h_1c00b09ac89128": {
+      "author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
