@@ -1,0 +1,31 @@
+package.json
+  s_1b49f879faf9d8::t_08306a45a4686d 1-15
+README.md
+  s_1b49f879faf9d8::t_91befd6e15dbd6 1-47
+.gitignore
+  s_1b49f879faf9d8::t_a2e2eaf765ff59 1-2
+docker/Dockerfile.analysis
+  s_1b49f879faf9d8::t_5f33e036ff073c 1-13
+extensions/find-packages.ts
+  s_1b49f879faf9d8::t_7b3d8457330cad 1-76
+scripts/sync-catalog.mjs
+  s_1b49f879faf9d8::t_dacffbb8c8c6d8 1-64
+skills/find-packages/SKILL.md
+  s_1b49f879faf9d8::t_e7daf9a583ea91 1-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "c43259f3795a89ff0a33d87713d5941d5e4f7dc3",
+  "prompts": {},
+  "sessions": {
+    "s_1b49f879faf9d8": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0ccb2-eaef-75d6-9b18-bff97cf2df73",
+        "model": "glm-5.3-flash"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
