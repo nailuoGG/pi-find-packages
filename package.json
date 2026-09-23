@@ -1,6 +1,6 @@
 {
   "name": "@nailuogg/pi-find-packages",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Local catalog of the pi package ecosystem with /find-packages: offline search, cold-start data, and sandboxed source analysis for integration review",
   "type": "module",
   "keywords": [
