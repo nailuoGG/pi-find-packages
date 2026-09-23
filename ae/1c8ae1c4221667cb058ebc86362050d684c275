@@ -1,0 +1,27 @@
+skills/find-packages/SKILL.md
+  s_1b49f879faf9d8::t_fc5028036a56e5 1,3,5,7-10,12,14-16,18,20,22,24-27,29,31-33,35,37
+extensions/find-packages.ts
+  s_1b49f879faf9d8::t_08302b60dfde61 5-10,12,15-16,21-24,32,43,45,47,51-54,58,70-142,144,147-150,152,156,164-166,170,173-174,176-184,186
+.github/workflows/update-data.yml
+  s_1b49f879faf9d8::t_d4e405b6948087 1-45
+README.md
+  s_1b49f879faf9d8::t_477ba468035a42 31-43,45-47
+scripts/sync-catalog.mjs
+  s_1b49f879faf9d8::t_a16bbc22fab61d 5-6,12,16-17,65-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "ae1c8ae1c4221667cb058ebc86362050d684c275",
+  "prompts": {},
+  "sessions": {
+    "s_1b49f879faf9d8": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0ccb2-eaef-75d6-9b18-bff97cf2df73",
+        "model": "glm-5.3-flash"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
