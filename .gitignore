@@ -1,3 +1,6 @@
 node_modules/
 *.log
 .DS_Store
+
+# Local execution evidence (see test-evidence/README.md) — deliberately not committed.
+test-evidence/
