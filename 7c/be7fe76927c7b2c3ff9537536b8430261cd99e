@@ -1,0 +1,14 @@
+.gitignore
+  h_1c00b09ac89128 4-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "7cbe7fe76927c7b2c3ff9537536b8430261cd99e",
+  "prompts": {},
+  "humans": {
+    "h_1c00b09ac89128": {
+      "author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
