@@ -1,0 +1,14 @@
+skills/find-packages/SKILL.md
+  h_1c00b09ac89128 133-144,159-160
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "027048056d6e9567c64e954286e1fb18ee378866",
+  "prompts": {},
+  "humans": {
+    "h_1c00b09ac89128": {
+      "author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
