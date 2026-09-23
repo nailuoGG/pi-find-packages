@@ -36,7 +36,14 @@ export default function activate(pi: ExtensionAPI) {
     mkdirSync(dataDir, { recursive: true });
     if (existsSync(bundled)) {
       writeFileSync(catalog, gunzipSync(readFileSync(bundled)));
-      pi.appendEntry("find-packages", { event: "cold-start-extract", from: bundled });
+      // pi only accepts registration calls while a factory runs; action methods
+      // such as appendEntry throw until pi commits the extension, and a throw here
+      // makes pi reject the whole extension (breaking every first run). Pure fs work
+      // is fine, so the audit entry is deferred to a session event instead.
+      const extracted = { event: "cold-start-extract", from: bundled };
+      pi.on("session_start", () => {
+        pi.appendEntry("find-packages", extracted);
+      });
     }
   }
 
