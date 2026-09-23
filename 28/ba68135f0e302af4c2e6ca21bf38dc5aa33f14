@@ -1,0 +1,14 @@
+README.md
+  h_1c00b09ac89128 24,28-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "28ba68135f0e302af4c2e6ca21bf38dc5aa33f14",
+  "prompts": {},
+  "humans": {
+    "h_1c00b09ac89128": {
+      "author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
