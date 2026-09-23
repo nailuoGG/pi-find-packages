@@ -1,0 +1,14 @@
+package.json
+  h_1c00b09ac89128 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "f06e25d6848ea1b81db9e79eb303afd806b05735",
+  "prompts": {},
+  "humans": {
+    "h_1c00b09ac89128": {
+      "author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
