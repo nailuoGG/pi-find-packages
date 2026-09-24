@@ -1,0 +1,36 @@
+extensions/find-packages.ts
+  s_63dc8adba81b2f::t_8dad1eae4699c2 183,186
+  s_63dc8adba81b2f::t_597f1b6c91f78a 184,188
+  s_63dc8adba81b2f::t_6ef63b31d4f31a 181-182
+README.md
+  s_63dc8adba81b2f::t_d81de651a132ea 10,42,70
+skills/find-packages/SKILL.md
+  s_63dc8adba81b2f::t_b1576abb37241f 106-117
+  s_63dc8adba81b2f::t_22099103e3bc91 65,94,101-104,139-142
+  s_63dc8adba81b2f::t_83689faa391e29 105
+  s_63dc8adba81b2f::t_dfc6ff8cc332d3 51-52
+test/unit/prompt-and-config.test.mjs
+  s_63dc8adba81b2f::t_1ff2ea652c4f4e 71,84
+  s_63dc8adba81b2f::t_1ee21adfd90802 40-45
+  s_63dc8adba81b2f::t_452fcb4526c196 76,78-79
+test/e2e/docker-analysis.test.mjs
+  s_63dc8adba81b2f::t_2e1211a013012d 4,9,12-14,23,25-28,35-40,42-49
+  s_63dc8adba81b2f::t_53354694420bbf 15-16,22,24,29-34,51-56
+  s_63dc8adba81b2f::t_c161e17904670f 41
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "17cbc0279cd1cd87d4aa3dcd2a57ce9a2218acab",
+  "prompts": {},
+  "sessions": {
+    "s_63dc8adba81b2f": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0d082-64de-72db-9fd7-890e6a61a292",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
