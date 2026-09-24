@@ -1,0 +1,27 @@
+.github/workflows/validate.yml
+  s_5ae30afd5f0b9d::t_c945c7e26d75bd 19-21,37-41
+  s_5ae30afd5f0b9d::t_6720fb680f53df 12,14,31,33
+.github/workflows/update-data.yml
+  s_5ae30afd5f0b9d::t_6720fb680f53df 15,17
+  s_5ae30afd5f0b9d::t_774034187a10a0 31-32
+  s_5ae30afd5f0b9d::t_cd504b9503a8d3 26-27,30,34-35,41-42
+.github/workflows/publish.yml
+  s_5ae30afd5f0b9d::t_07a59ea0357612 24-25,32,40-42
+  s_5ae30afd5f0b9d::t_6720fb680f53df 16,18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "197fbb58995d2a620c0bde81c349c410f999a429",
+  "prompts": {},
+  "sessions": {
+    "s_5ae30afd5f0b9d": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0d136-1944-756a-8cb9-f48784e958a5",
+        "model": "glm-5.3-flash"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
