@@ -1,0 +1,19 @@
+test/unit/prompt-and-config.test.mjs
+  s_5ae30afd5f0b9d::t_bd854bb00659bb 4,42-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "8ac19adf359ad22eae6026a34581301fb1c99f74",
+  "prompts": {},
+  "sessions": {
+    "s_5ae30afd5f0b9d": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0d136-1944-756a-8cb9-f48784e958a5",
+        "model": "glm-5.3-flash"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
