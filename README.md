@@ -7,7 +7,7 @@ A [pi](https://pi.dev) extension providing a local catalog of the pi package eco
 - **Offline catalog**: syncs the full `keywords:pi-package` corpus (~5k+ packages) from npm to local JSONL; search with jq/grep over descriptions, names, and keywords — no dependence on npm's keyword-matched search
 - **`/find-packages <need>`**: retrieve candidates → read-only source analysis in a sandbox → comparison table and recommendation against criteria (feature overlap / peer compatibility / maintenance activity / supply-chain signals)
 - **Cold start**: the package ships a bundled catalog snapshot (`data/catalog.jsonl.gz`); install and use immediately with zero network requests on first run
-- **Docker isolation by default**: candidate repos are cloned and unpacked inside a credential-free, non-root container; isolation can be disabled explicitly (a risk warning is shown on every use — not recommended)
+- **Docker isolation by default**: candidate repos are fetched and unpacked inside a credential-free, non-root container (read-only root, no capabilities, no-new-privileges, tmpfs work dirs; no host source mount); isolation can be disabled explicitly (a risk warning is shown on every use — not recommended)
 
 ## Install
 
@@ -39,9 +39,7 @@ qmd collection add "$HOME/.pi/agent/data/pi-find-packages/readmes" --name pi-pkg
 qmd collection show pi-pkg-readmes   # confirm the path matches your data directory
 ```
 
-Substitute your real data directory when `PI_CODING_AGENT_DIR` is set. Afterwards
-`/find-packages` keeps the corpus current on its own: each reviewed candidate's README is
-saved into `readmes/` and indexed with `qmd update && qmd embed`.
+Substitute your real data directory when `PI_CODING_AGENT_DIR` is set. Afterwards `/find-packages` uses qmd results only as leads: verify each candidate against its current npm version and the cached README's first line, then overwrite that README after review and index with `qmd update && qmd embed`. It does not bulk-update READMEs.
 
 ## Refreshing the catalog
 
@@ -69,7 +67,7 @@ the latest npm publish and therefore updates on release cadence.
 docker build -t pi-find-packages-analysis -f docker/Dockerfile.analysis docker
 ```
 
-The image contains no pi and no credentials: it exists solely to clone/unpack/read third-party source. Never execute a candidate package's install scripts or build artifacts in any environment.
+The image contains no pi and no credentials: it exists solely to fetch, verify, unpack and read third-party source. Runtime must use a read-only root, `--cap-drop=ALL`, `--security-opt=no-new-privileges`, the non-root analyst user, and tmpfs `/analysis` and `/tmp` mounts (`mode=1777`); never bind-mount candidate source from the host. Allow required npm registry/GitHub access. Only analysis text returns to the host. Never execute a candidate package's install scripts or build artifacts in any environment.
 
 ## Releasing
 

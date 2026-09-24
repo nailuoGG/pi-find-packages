@@ -48,6 +48,8 @@ jq -r 'select((.name + " " + (.description // "") + " " + ((.keywords // [])|joi
   | [.name, .version, (.publisher // ""), .date] | @tsv' "$CAT"
 ```
 
+For broad searches, count matches first, then narrow the terms or page through results. Never choose a shortlist from truncated output.
+
 Expected output — tab-separated, one candidate per line:
 
 ```text
@@ -60,7 +62,7 @@ Expected output — tab-separated, one candidate per line:
 **Semantic search (optional).** Only when `qmd` is installed and `semantic` is not `"off"` — see
 Configuration. It searches cached READMEs of previously reviewed packages only, so check the collection
 first and skip semantic search while it is empty — `qmd query` spends an LLM expansion pass per call,
-`qmd ls` is free:
+`qmd ls` is free. Treat results only as leads; verify current facts against npm:
 
 ```bash
 qmd ls pi-pkg-readmes                                  # "No files found" → skip
@@ -89,15 +91,30 @@ Run every candidate through all four checks; record the evidence for each one.
 | Check | How to verify | Verdict |
 |---|---|---|
 | **Feature overlap** (hard rule) | Compare against pi built-ins and the packages installed in the `packages` array of `$PI_CODING_AGENT_DIR/settings.json` and of the project `.pi/settings.json` | Any overlap → recommend against, whatever the other checks say |
-| **pi compatibility** | `npm view <pkg> peerDependencies` | Peer range must cover the current pi version |
+| **pi compatibility** | Check actual `pi --version` and `npm view <pkg> peerDependencies` | Compare the peer range with the running version. If the installed package-directory copy reports another version, record that drift; do not call it incompatible on drift alone |
 | **Maintenance activity** | Catalog `date` (last publish) plus the last commit in `repo` | Stale on both → note as risk, not a blocker |
 | **Supply chain** | `npm view <pkg> maintainers dependencies scripts` | Flag `install`/`preinstall` scripts, large dependency trees, and any path that sends data off-host |
 
 ## 4. Analyze sources in the sandbox
 
 Source analysis runs in Docker by default, using `../../docker/Dockerfile.analysis` (node24-slim + git +
-ripgrep, no credentials). Clone, unpack and read candidate code **inside the container**; only analysis
-text reaches the host.
+ripgrep, no credentials). Do not mount candidate source from the host. Run read-only with
+`--cap-drop=ALL --security-opt=no-new-privileges`, as the non-root analyst user, and tmpfs mounts for
+`/analysis` and `/tmp` with `mode=1777`. Allow network access needed for npm registry/GitHub. Fetch,
+verify, unpack and read candidate code **inside the container**; only analysis text reaches the host.
+
+Before analysis, replace `<image>` with the built analysis image name and run this preflight to confirm
+non-root execution and writable workdirs:
+
+```bash
+docker run --rm --read-only --cap-drop=ALL --security-opt=no-new-privileges \
+  --tmpfs /analysis:rw,mode=1777 --tmpfs /tmp:rw,mode=1777 \
+  <image> -c 'test "$(id -u)" -ne 0 && touch /analysis/.probe /tmp/.probe'
+```
+
+This preflight only checks the runtime. Fetching candidate source, verifying its integrity, and
+unpacking it must still happen inside a container with the same security options; never bind-mount
+candidate source from the host.
 
 **Never execute a candidate's install scripts or build artifacts** — not on the host and not in the
 container. Reading `package.json`, the README or registry metadata needs no container, so shallow
@@ -119,9 +136,10 @@ Compare the shortlist in a table, then give one recommendation with reasons:
 
 ## README cache
 
-After reviewing a candidate, save its README to
-`<catalog dir>/readmes/<name with / replaced by __>.md`, first line `# <name> <version> <date>`, then
-refresh the semantic index:
+After reviewing a candidate, verify the current npm version and compare it with the first line of any
+cached README; qmd hits are leads only. Overwrite that candidate's README at
+`<catalog dir>/readmes/<name with / replaced by __>.md`, first line `# <name> <verified version> <date>`,
+then refresh the semantic index. Never bulk-update README files:
 
 ```bash
 qmd update && qmd embed

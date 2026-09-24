@@ -1,46 +1,58 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, writeFileSync, chmodSync, rmSync } from "node:fs";
-import { tmpdir, homedir } from "node:os";
-import { basename, join } from "node:path";
+import { randomUUID } from "node:crypto";
 import { repoRoot } from "../helpers/pi-runner.mjs";
 
 const enabled = process.env.PI_FIND_PACKAGES_E2E_DOCKER === "1";
 
-// The bind-mount source must sit on a path the daemon can actually see. When the
-// daemon runs inside a VM (colima or Docker Desktop), the VM-local /tmp is NOT the
-// host /tmp, so mounting a os.tmpdir() path yields an empty /analysis and the test
-// looks like "candidate file missing". Those setups share the host home directory,
-// so keep the mount source under it. Override with
-// PI_FIND_PACKAGES_E2E_DOCKER_TMPDIR when the daemon shares something else.
-function shareableBaseDir() {
-  return process.env.PI_FIND_PACKAGES_E2E_DOCKER_TMPDIR
-    ?? join(homedir(), ".cache", "pi-find-packages-test-mount");
-}
-
-test("Docker analysis image runs as non-root and reads candidate source", {
+test("Docker analysis image enforces non-root hardened runtime and writable tmpfs workdirs", {
   skip: enabled ? false : "set PI_FIND_PACKAGES_E2E_DOCKER=1 to enable",
 }, () => {
-  const base = shareableBaseDir();
-  mkdirSync(base, { recursive: true });
-  const dir = mkdtempSync(join(base, "fp-docker-"));
-  const tag = `pi-find-packages-analysis-test:${basename(dir)}`.toLowerCase();
-  writeFileSync(join(dir, "candidate.txt"), "candidate source is readable\n");
-  chmodSync(dir, 0o755);
+  const id = randomUUID();
+  const tag = `pi-find-packages-analysis-test:${id}`;
+  const containerName = `pi-find-packages-analysis-test-${id}`;
+  let buildSucceeded = false;
+  let containerCreated = false;
   try {
     const build = spawnSync("docker", ["build", "-f", "docker/Dockerfile.analysis", "-t", tag, "."], {
       cwd: repoRoot, encoding: "utf8", timeout: 600000,
     });
     assert.equal(build.status, 0, `Docker image should build: ${build.error ?? build.stderr}`);
-    const run = spawnSync("docker", ["run", "--rm", "--network", "none", "-v", `${dir}:/analysis:ro`, tag,
-      "-c", "id -u; cat /analysis/candidate.txt"], { cwd: repoRoot, encoding: "utf8", timeout: 60000 });
-    assert.equal(run.status, 0, `analysis container should run: ${run.error ?? run.stderr}`);
-    const [uid, content] = run.stdout.trim().split("\n");
-    assert.match(uid, /^[1-9][0-9]*$/, "analysis container must run with a non-root uid");
-    assert.equal(content, "candidate source is readable", "non-root user must read the mounted candidate file");
+    buildSucceeded = true;
+
+    const create = spawnSync("docker", ["create", "--name", containerName, "--read-only", "--cap-drop=ALL",
+      "--security-opt=no-new-privileges", "--tmpfs", "/analysis:rw,mode=1777", "--tmpfs", "/tmp:rw,mode=1777",
+      tag, "-c", "set -e; test \"$(id -u)\" -ne 0; touch /analysis/probe /tmp/probe; if touch /root-write-probe 2>/dev/null; then exit 42; fi"], {
+      cwd: repoRoot, encoding: "utf8", timeout: 60000,
+    });
+    assert.equal(create.status, 0, `analysis container should be created: ${create.error ?? create.stderr}`);
+    containerCreated = true;
+
+    const run = spawnSync("docker", ["start", "--attach", containerName], {
+      cwd: repoRoot, encoding: "utf8", timeout: 60000,
+    });
+    assert.equal(run.status, 0, `runtime probes should pass (non-root, writable tmpfs dirs, read-only root): ${run.error ?? run.stderr}`);
+
+    const inspect = spawnSync("docker", ["inspect", containerName], { encoding: "utf8", timeout: 60000 });
+    assert.equal(inspect.status, 0, `container inspect should succeed: ${inspect.error ?? inspect.stderr}`);
+    const [container] = JSON.parse(inspect.stdout);
+    const { HostConfig: host, Mounts: mounts } = container;
+    assert.equal(container.State.ExitCode, 0, "container runtime probes must exit successfully");
+    assert.equal(host.ReadonlyRootfs, true, "root filesystem must be read-only");
+    assert.ok(host.CapDrop?.includes("ALL"), "all Linux capabilities must be dropped");
+    assert.ok(host.SecurityOpt?.some((option) => /no-new-privileges/.test(option)), "no-new-privileges must be enabled");
+    assert.deepEqual(Object.keys(host.Tmpfs ?? {}).sort(), ["/analysis", "/tmp"], "only /analysis and /tmp should be tmpfs mounts");
+    for (const path of ["/analysis", "/tmp"]) {
+      assert.match(host.Tmpfs[path], /mode=1777/, `${path} tmpfs must have mode 1777`);
+    }
+    assert.ok(!mounts.some((mount) => mount.Type === "bind"), "container must not have host bind mounts");
   } finally {
-    spawnSync("docker", ["image", "rm", tag], { encoding: "utf8", timeout: 60000 });
-    rmSync(dir, { recursive: true, force: true });
+    if (containerCreated) {
+      spawnSync("docker", ["rm", "--force", containerName], { encoding: "utf8", timeout: 60000 });
+    }
+    if (buildSucceeded) {
+      spawnSync("docker", ["image", "rm", tag], { encoding: "utf8", timeout: 60000 });
+    }
   }
 });

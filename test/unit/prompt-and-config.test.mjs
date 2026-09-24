@@ -37,6 +37,12 @@ test("the injected prompt points at the isolated catalog directory", async () =>
   assert.ok(prompt.includes(expectedCatalog), `prompt should reference ${expectedCatalog}`);
   assert.ok(prompt.includes(join(agentDir, dataDirName, "readmes")), "prompt should reference the readmes cache");
   assert.ok(!prompt.includes("~/.pi/agent"), "prompt must not hardcode the default agent dir");
+  assert.match(prompt, /count matches first.*truncated output/i);
+  assert.match(prompt, /qmd hits only as leads/i);
+  assert.match(prompt, /actual pi --version/i);
+  assert.match(prompt, /--read-only --cap-drop=ALL --security-opt=no-new-privileges/i);
+  assert.match(prompt, /tmpfs mounts for \/analysis and \/tmp with mode=1777/i);
+  assert.match(prompt, /no host candidate-source bind mount/i);
 });
 
 test("regression: the prompt never tells the model to run the nonexistent qmd index command", async () => {
@@ -62,19 +68,20 @@ test("isolation:off adds the risk warning and points at host analysis", async ()
 test("the default (or absent) config keeps Docker isolation and shows no warning", async () => {
   for (const config of [undefined, JSON.stringify({})]) {
     const { prompt } = await runCommand({ config });
-    assert.match(prompt, /must run inside the Docker container/);
+    assert.match(prompt, /source analysis must run inside the Docker container with --read-only/);
     assert.ok(!/Isolation disabled/.test(prompt), "no risk warning when isolation is on");
   }
 });
 
-test('semantic:"off" drops the qmd instructions from the prompt', async () => {
+test('semantic:"off" drops qmd search and indexing instructions from the prompt', async () => {
   const { prompt } = await runCommand({ config: JSON.stringify({ semantic: "off" }) });
-  assert.ok(!prompt.includes("qmd"), "semantic search is disabled, so no qmd instructions");
+  assert.ok(!prompt.includes("qmd query"), "semantic search is disabled");
+  assert.ok(!prompt.includes("qmd update"), "semantic indexing is disabled");
 });
 
 test("malformed config.json falls back to the safe defaults instead of crashing", async () => {
   const { prompt } = await runCommand({ config: "{ this is not json" });
-  assert.match(prompt, /must run inside the Docker container/, "malformed config must not disable isolation");
+  assert.match(prompt, /source analysis must run inside the Docker container with --read-only/, "malformed config must not disable isolation");
 });
 
 test("an omitted command argument reports usage without sending a prompt", async () => {
