@@ -12,9 +12,9 @@ jobs:
   refresh:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
 
@@ -23,17 +23,23 @@ jobs:
 
       - name: Skip if unchanged
         id: diff
+        env:
+          REPO: ${{ github.repository }}
         run: |
           NEW="${RUNNER_TEMP}/catalog/catalog.jsonl.gz"
-          OLD="$(curl -fsSL --max-time 30 https://cdn.jsdelivr.net/gh/${GITHUB_REPOSITORY}@data/data/catalog.jsonl.gz 2>/dev/null | sha256sum | cut -d' ' -f1 || true)"
+          URL="https://cdn.jsdelivr.net/gh/${REPO}@data/data/catalog.jsonl.gz"
+          OLD="$(curl -fsSL --max-time 30 "${URL}" 2>/dev/null \
+            | sha256sum | cut -d' ' -f1 || true)"
           CUR="$(sha256sum "${NEW}" | cut -d' ' -f1)"
-          echo "changed=$([[ "${CUR}" != "${OLD}" ]] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          CHANGED=$([[ "${CUR}" != "${OLD}" ]] && echo true || echo false)
+          echo "changed=${CHANGED}" >> "$GITHUB_OUTPUT"
 
       - name: Push to data branch
         if: steps.diff.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch origin data || true
           git checkout -B data origin/data 2>/dev/null || git checkout -B data
           mkdir -p data

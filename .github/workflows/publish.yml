@@ -13,22 +13,23 @@ jobs:
     runs-on: ubuntu-latest
     environment: npm
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org/
 
       - name: Ensure npm supports Trusted Publishing
-        run: npm install -g npm@latest # OIDC trusted publishing needs npm >= 11.5.1
+        # OIDC trusted publishing needs npm >= 11.5.1
+        run: npm install -g npm@latest
 
       - name: Verify version matches tag
         run: |
           PKG_VERSION="${GITHUB_REF_NAME#v}"
           TAG_VERSION="$(node -p "require('./package.json').version")"
           if [ "${PKG_VERSION}" != "${TAG_VERSION}" ]; then
-            echo "::error::tag ${GITHUB_REF_NAME} != package.json version ${TAG_VERSION}"
+            echo "::error::tag ${GITHUB_REF_NAME} != version ${TAG_VERSION}"
             exit 1
           fi
 
@@ -36,6 +37,8 @@ jobs:
         run: npm publish
 
       - name: Create GitHub release
-        run: gh release create "${GITHUB_REF_NAME}" --verify-tag --generate-notes
+        run: >
+          gh release create "${GITHUB_REF_NAME}"
+          --verify-tag --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}

@@ -9,15 +9,16 @@ jobs:
   skills:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
 
       # Agent Skills reference validator (https://agentskills.io/specification).
-      # pi drops a SKILL.md whose frontmatter is missing or has no description, so a
-      # skill can go silently unusable; gate on the spec instead of noticing later.
+      # pi drops a SKILL.md whose frontmatter is missing or has no
+      # description, so a skill can go silently unusable; gate on the
+      # spec instead of noticing later.
       - name: Validate skills
         run: |
           for dir in skills/*/; do
@@ -27,16 +28,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
 
-      # The suite spawns real `pi` processes against an isolated minimal agent dir and
-      # a scripted local endpoint, and asserts against pi's own behaviour (skill
-      # advertisement, extension load failures). Pin the version to keep the gate
-      # deterministic and bump it deliberately after checking a new release.
+      # The suite spawns real `pi` processes against an isolated minimal
+      # agent dir and a scripted local endpoint, and asserts against pi's
+      # own behaviour (skill advertisement, extension load failures).
+      # Pin the version to keep the gate deterministic and bump it
+      # deliberately after checking a new release.
       # The real-model case stays opt-in (PI_FIND_PACKAGES_E2E_REAL_MODEL).
       - name: Install pi
         run: npm install -g @earendil-works/pi-coding-agent@0.87.1
