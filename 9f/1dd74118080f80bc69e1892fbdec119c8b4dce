@@ -1,0 +1,19 @@
+package.json
+  s_fd9038db3f4a76::t_3840b6befbcd02 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.4",
+  "base_commit_sha": "9f1dd74118080f80bc69e1892fbdec119c8b4dce",
+  "prompts": {},
+  "sessions": {
+    "s_fd9038db3f4a76": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a0d051-9fbc-7300-b285-f6d61ae644d7",
+        "model": "deepseek-flash"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
