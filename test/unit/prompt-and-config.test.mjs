@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createStubExtensionApi } from "../helpers/stub-api.mjs";
@@ -38,7 +39,14 @@ test("the injected prompt points at the isolated catalog directory", async () =>
   assert.ok(prompt.includes(join(agentDir, dataDirName, "readmes")), "prompt should reference the readmes cache");
   assert.ok(!prompt.includes("~/.pi/agent"), "prompt must not hardcode the default agent dir");
   assert.match(prompt, /count matches first.*truncated output/i);
-  assert.match(prompt, /qmd hits only as leads/i);
+  // The qmd-specific wording only appears when the qmd binary exists
+  // (semantic mode "auto", same detection as the extension). CI has no qmd.
+  const qmdUsable = spawnSync("qmd", ["--version"], { timeout: 5000 }).status === 0;
+  if (qmdUsable) {
+    assert.match(prompt, /qmd hits only as leads/i);
+  } else {
+    assert.doesNotMatch(prompt, /qmd query/i);
+  }
   assert.match(prompt, /actual pi --version/i);
   assert.match(prompt, /--read-only --cap-drop=ALL --security-opt=no-new-privileges/i);
   assert.match(prompt, /tmpfs mounts for \/analysis and \/tmp with mode=1777/i);
