@@ -9,9 +9,9 @@ jobs:
   skills:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7.0.1
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 24
 
@@ -28,9 +28,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7.0.1
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 24
 
@@ -41,7 +41,7 @@ jobs:
       # deliberately after checking a new release.
       # The real-model case stays opt-in (PI_FIND_PACKAGES_E2E_REAL_MODEL).
       - name: Install pi
-        run: npm install -g @earendil-works/pi-coding-agent@0.87.1
+        run: npm install -g @earendil-works/pi-coding-agent@1.2.0
 
       - name: Run tests
         run: npm test
