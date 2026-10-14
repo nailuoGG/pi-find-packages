@@ -1,0 +1,19 @@
+package.json
+  s_072434bb3af0bd::t_1ea4303b1cce28 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "99dcb139d68eb4434da55588ec4c925ec1a91dae",
+  "prompts": {},
+  "sessions": {
+    "s_072434bb3af0bd": {
+      "agent_id": {
+        "tool": "pi",
+        "id": "01a13b3c-ea2a-71d3-b689-3fb52c6df79b",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "James L. <nailuogg@gmail.com>"
+    }
+  }
+}
